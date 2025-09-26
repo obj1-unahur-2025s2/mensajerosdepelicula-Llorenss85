@@ -1,9 +1,71 @@
-import example.pepita
+import empresa.*
+import paquete.*
+import  destinos.*
+import vehiculos.*
+import mensajero.*
 
-describe "group of tests for pepita" {
 
-  test "pepita has initial energy" {
-    assert.equals(100, pepita.energy())
+//test 2
+
+describe "tercera Parte" {
+  test "al menos un mensajero puede entregar el paquete" {
+    empresa.contratarMensajero(roberto)
+    empresa.contratarMensajero(neo)
+    paquete.pagar(50)
+    assert.that(empresa.alMenosUnoPuedeEntregarPaquete(paquete))
   }
 
+  test "mensajeros que pueden llevar un paqueton " {
+    empresa.contratarMensajero(roberto)
+    empresa.contratarMensajero(neo)
+    empresa.contratarMensajero(chuckNorris)
+    neo.cargarCredito(50)
+    paqueton.pagar(200)
+    assert.equals(empresa.mensajerosPuedenObtenerElPaquete(paqueton).size(),[roberto,chuckNorris].size())
+  }
+  test "la empresa envia 1 paquete de la empresa "{
+    empresa.contratarMensajero(roberto)
+    paquete.pagar(50)
+    empresa.enviarPaquete(paquete)
+    assert.equals(1,empresa.paquetesEnviados())
+  }
+  test "la empresa no puede enviar el paquete asi que va a pendientes, pendiente tiene 1" {
+    empresa.contratarMensajero(roberto)
+    empresa.enviarPaquete(paquete)
+    assert.equals(empresa.paquetesPendientes().size(),1)
+  }
+  test "facturacion de empresa es de 100"{
+    empresa.contratarMensajero(roberto)
+    empresa.contratarMensajero(neo)
+    neo.cargarCredito(50)
+    paquete.pagar(50)
+    paqueton.pagar(200)
+    empresa.enviarPaquete(paquete)
+    empresa.enviarPaquete(paqueton)
+    assert.equals( empresa.facturacion(),500)
+  }
+
+  test "se envia en un grupo de 3 paquetes, los cuales se verifica que los 3 estan enviados " {
+    empresa.contratarMensajero(roberto)
+    empresa.contratarMensajero(neo)
+
+    neo.cargarCredito(50)
+    paqueton.pagar(200)
+    empresa.enviarLosPaquetes([paquete,paquetito,paqueton])
+    assert.equals(empresa.paquetesEnviados(),3)
+  }
+
+  test "paquete mas caro es posible mandar " {
+    empresa.contratarMensajero(roberto)
+    empresa.contratarMensajero(neo)
+    neo.cargarCredito(50)
+    paquete.pagar(50)
+    empresa.enviarPaquete(paquete)
+    empresa.enviarPaquete(paqueton)
+    paqueton.pagar(200) // paga el paquete mas caro pendiente
+    empresa.enviarPaqueteMasCaroPendiente()
+    console.println(empresa.paquetesPendientes())
+    
+    assert.equals( empresa.paquetesPendientes().size(),0)
+  }
 }
